@@ -1,5 +1,9 @@
 package com.reddytronix.vendingmachine.controller;
 
+import java.util.List;
+
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,13 +32,22 @@ public class ProductController {
 
     @PreAuthorize("hasAuthority('SELLER')")
     @PostMapping("/products")
-    public ResponseEntity<ProductRepresentation> createProduct(@RequestBody final ProductRepresentation productRepresentation) {
+    public ResponseEntity<ProductRepresentation> createProduct(@RequestBody @Valid final ProductRepresentation productRepresentation) {
 
         productValidator.validate(productRepresentation);
 
         final Product product = productMapper.fromProductRepresentation(productRepresentation);
         final Product createdProduct = productService.createProduct(product);
         return ResponseEntity.status(HttpStatus.CREATED).body(productMapper.toProductRepresentation(createdProduct));
+    }
+
+    @GetMapping("/products")
+    public ResponseEntity<ProductCollectionRepresentation> getProducts() {
+        final List<Product> products = productService.getProducts();
+        final List<ProductRepresentation> productRepresentations = productMapper.toProductRepresentations(products);
+        final ProductCollectionRepresentation collectionRepresentation = new ProductCollectionRepresentation();
+        collectionRepresentation.setProducts(productRepresentations);
+        return ResponseEntity.ok(collectionRepresentation);
     }
 
     @PreAuthorize("hasAuthority('SELLER')")

@@ -1,5 +1,6 @@
 package com.reddytronix.vendingmachine.service;
 
+import java.util.List;
 import java.util.Objects;
 
 import org.springframework.stereotype.Service;
@@ -30,6 +31,10 @@ public class ProductService {
                                 .orElseThrow(
                                     () -> new ProductNotFoundException(
                                         "Product (Id: " + productId + ") does not exists"));
+    }
+
+    public List<Product> getProducts(){
+        return productRepository.findAll();
     }
 
     public Product updateProduct(final Product product) {
