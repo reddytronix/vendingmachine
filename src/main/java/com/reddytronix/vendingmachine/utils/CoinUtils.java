@@ -22,11 +22,10 @@ public class CoinUtils {
 
             final int numOfCoins = (int) (remainingChange / coinValue);
             if (numOfCoins >= 1) {
-                availableCoins.put(coinValue, numOfCoins);
                 remainingChange = remainingChange % coinValue;
-            }else{
-                availableCoins.put(coinValue, numOfCoins);
             }
+            availableCoins.put(coinValue, numOfCoins);
+
         }
         return availableCoins.entrySet()
                              .stream()
